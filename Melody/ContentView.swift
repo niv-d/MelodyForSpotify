@@ -51,12 +51,8 @@ struct SpotifyWebView: UIViewRepresentable {
     touchAriaLabel(label: String("Search"))
   }
 
-  func mediaPlay() {
-    touchAriaLabel(label: String("Play"))
-  }
-
-  func mediaPause() {
-    touchAriaLabel(label: String("Pause"))
+  func mediaPlayPause(){
+    touchTestID(id: String("control-button-playpause"))
   }
 
   func mediaNext() {
@@ -93,24 +89,20 @@ struct SpotifyWebView: UIViewRepresentable {
 
 
   private func touchAriaLabel(label: String) {
-    let script = """
-        const button = document.querySelector('[aria-label="\(label)"]');
-        if (button) {
-            button.click();
-        } else {
-            console.log('[aria-label="\(label)"] not found');
-        }
-      """
-    runJavascript(script: script)
+    queryAndClick(query: String("[aria-label=\"\(label)\"]"))
   }
 
   private func touchTestID(id: String) {
+    queryAndClick(query: String("[data-testid=\"\(id)\"]"))
+  }
+
+  private func queryAndClick(query: String) {
     let script = """
-        const button = document.querySelector('[data-testid="\(id)"]');
+        const button = document.querySelector('\(query)');
         if (button) {
             button.click();
         } else {
-            console.log('[data-testid="\(id)"] not found');
+            console.log('\(query) not found');
         }
       """
     runJavascript(script: script)
