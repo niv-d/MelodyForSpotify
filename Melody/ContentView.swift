@@ -10,48 +10,36 @@ import RealityKitContent
 import SwiftUI
 import WebKit
 
-struct SpotifyWebView: UIViewRepresentable {
-  let webView: WKWebView
+class WebViewModel: ObservableObject {
+  var webView: WKWebView = WKWebView()
+
+  init() {
+    let configuration = WKWebViewConfiguration()
+    configuration.applicationNameForUserAgent =
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Safari/605.1.15"
+    
+    webView = WKWebView(frame: .zero, configuration: configuration)
+  }
 
   private func log(
     _ items: Any...,
     separator: String = " ",
     terminator: String = "\n"
   ) {
-    let prefix = "SpotifyWebView"
+    let prefix = "SpotifyWebViewModel"
     let message = items.map { "\($0)" }.joined(separator: separator)
     print("\(prefix):\n \(message)", terminator: terminator)
   }
 
-  func makeUIView(context: Context) -> WKWebView {
-    let configuration = WKWebViewConfiguration()
-    configuration.applicationNameForUserAgent =
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Safari/605.1.15"
-    configuration.userContentController.add(
-      context.coordinator as WKScriptMessageHandler, name: "consoleLog")
-
-    let webView = WKWebView(frame: .zero, configuration: configuration)
-    webView.navigationDelegate = context.coordinator
-    webView.load(URLRequest(url: URL(string: "https://accounts.spotify.com/en/login")!))
-    // webView.load(URLRequest(url: URL(string: "https://open.spotify.com")!))
-    webView.isOpaque = false
-    webView.backgroundColor = UIColor.clear
-
-    return webView
-  }
-
-  func updateUIView(_ uiView: WKWebView, context: Context) {
-  }
-
   func goHome() {
-    touchAriaLabel(label: String("Home"))
+     touchAriaLabel(label: String("Home"))
   }
 
   func goSearch() {
     touchAriaLabel(label: String("Search"))
   }
 
-  func mediaPlayPause(){
+  func mediaPlayPause() {
     touchTestID(id: String("control-button-playpause"))
   }
 
@@ -87,7 +75,6 @@ struct SpotifyWebView: UIViewRepresentable {
     touchTestID(id: String("control-button-queue"))
   }
 
-
   private func touchAriaLabel(label: String) {
     queryAndClick(query: String("[aria-label=\"\(label)\"]"))
   }
@@ -98,17 +85,21 @@ struct SpotifyWebView: UIViewRepresentable {
 
   private func queryAndClick(query: String) {
     let script = """
-        const button = document.querySelector('\(query)');
-        if (button) {
-            button.click();
+      (function() {
+        const targetedButton = document.querySelector('\(query)');
+        if (targetedButton) {
+            targetedButton.click();
+            console.log('found the button, clicked on it');
         } else {
             console.log('\(query) not found');
         }
+      })()
       """
     runJavascript(script: script)
   }
 
   private func runJavascript(script: String) {
+    self.log("Reunning script:\n \(script)")
     webView.evaluateJavaScript(script) { result, error in
       if let error = error {
         self.log("Error during JS execution: \(error)")
@@ -116,7 +107,37 @@ struct SpotifyWebView: UIViewRepresentable {
       if let result = result {
         self.log("Result of JS execution: \(result)")
       }
+      self.log("ran js")
     }
+  }
+}
+
+struct SpotifyWebView: UIViewRepresentable {
+  let webView: WKWebView
+
+  private func log(
+    _ items: Any...,
+    separator: String = " ",
+    terminator: String = "\n"
+  ) {
+    let prefix = "SpotifyWebView"
+    let message = items.map { "\($0)" }.joined(separator: separator)
+    print("\(prefix):\n \(message)", terminator: terminator)
+  }
+
+  func makeUIView(context: Context) -> WKWebView {
+    webView.configuration.userContentController.add(
+      context.coordinator as WKScriptMessageHandler, name: "consoleLog")
+    webView.navigationDelegate = context.coordinator
+    webView.load(URLRequest(url: URL(string: "https://accounts.spotify.com/en/login")!))
+    // webView.load(URLRequest(url: URL(string: "https://open.spotify.com")!))
+    webView.isOpaque = false
+    webView.backgroundColor = UIColor.clear
+
+    return webView
+  }
+
+  func updateUIView(_ uiView: WKWebView, context: Context) {
   }
 
   func readPageContent(completion: @escaping (String?, Error?) -> Void) {
@@ -209,13 +230,33 @@ struct SpotifyWebView: UIViewRepresentable {
 }
 
 struct ContentView: View {
-  let webView: WKWebView = WKWebView()
+  //  let webView: WKWebView = WKWebView()
+  @ObservedObject var viewModel = WebViewModel()
+  @State private var selectedTab = 0
 
   var body: some View {
     VStack {
-      SpotifyWebView(webView: webView)
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+
+      TabView(selection: $selectedTab) {
+        Text("").tabItem {
+          Label("Home", systemImage: "house")
+        }
+        .tag(0).onAppear {
+          viewModel.goHome()
+        }
+
+        Text("").tabItem {
+          Label("Search", systemImage: "magnifyingglass")
+        }
+        .tag(1).onAppear {
+          viewModel.goSearch()
+        }
+      }
     }
+    .overlay(
+      SpotifyWebView(webView: viewModel.webView)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+    )
   }
 }
 
