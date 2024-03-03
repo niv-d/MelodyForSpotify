@@ -43,6 +43,90 @@ struct SpotifyWebView: UIViewRepresentable {
   func updateUIView(_ uiView: WKWebView, context: Context) {
   }
 
+  func goHome() {
+    touchAriaLabel(label: String("Home"))
+  }
+
+  func goSearch() {
+    touchAriaLabel(label: String("Search"))
+  }
+
+  func mediaPlay() {
+    touchAriaLabel(label: String("Play"))
+  }
+
+  func mediaPause() {
+    touchAriaLabel(label: String("Pause"))
+  }
+
+  func mediaNext() {
+    touchAriaLabel(label: String("Next"))
+  }
+
+  func mediaPrevious() {
+    touchAriaLabel(label: String("Previous"))
+  }
+
+  func mediaShuffle() {
+    touchTestID(id: String("control-button-shuffle"))
+  }
+
+  func mediaRepeat() {
+    touchTestID(id: String("control-button-repeat"))
+  }
+
+  func mediaHeart() {
+    touchTestID(id: String("add-button"))
+  }
+
+  func mediaRemove() {
+    touchAriaLabel(label: String("Remove"))
+  }
+
+  func mediaLyrics() {
+    touchTestID(id: String("lyrics-button"))
+  }
+
+  func mediaQueue() {
+    touchTestID(id: String("control-button-queue"))
+  }
+
+
+  private func touchAriaLabel(label: String) {
+    let script = """
+        const button = document.querySelector('[aria-label="\(label)"]');
+        if (button) {
+            button.click();
+        } else {
+            console.log('[aria-label="\(label)"] not found');
+        }
+      """
+    runJavascript(script: script)
+  }
+
+  private func touchTestID(id: String) {
+    let script = """
+        const button = document.querySelector('[data-testid="\(id)"]');
+        if (button) {
+            button.click();
+        } else {
+            console.log('[data-testid="\(id)"] not found');
+        }
+      """
+    runJavascript(script: script)
+  }
+
+  private func runJavascript(script: String) {
+    webView.evaluateJavaScript(script) { result, error in
+      if let error = error {
+        self.log("Error during JS execution: \(error)")
+      }
+      if let result = result {
+        self.log("Result of JS execution: \(result)")
+      }
+    }
+  }
+
   func readPageContent(completion: @escaping (String?, Error?) -> Void) {
     let js = "document.body.innerText"  // JavaScript to get all text content from the body
     webView.evaluateJavaScript(js) { result, error in
