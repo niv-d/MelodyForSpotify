@@ -4,6 +4,10 @@ setTimeout(() => {
 
   var elements = document.querySelectorAll("*:not([data-testid])");
   elements.forEach(function (element) {
-    element.style.background = "#0000";
+    element.style.backgroundColor = "#0000";
   });
+
+  document.addEventListener('contextmenu', event => {
+    event.preventDefault();
+});
 }, 400);

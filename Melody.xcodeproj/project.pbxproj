@@ -15,6 +15,8 @@
 		6A6BD6C22B93DD7C0002E8AB /* MelodyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6BD6C12B93DD7C0002E8AB /* MelodyTests.swift */; };
 		6A6BD6CD2B93F71D0002E8AB /* theme.css in Resources */ = {isa = PBXBuildFile; fileRef = 6A6BD6CC2B93F71D0002E8AB /* theme.css */; };
 		6A6BD6CF2B9401C40002E8AB /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 6A6BD6CE2B9401C40002E8AB /* script.js */; };
+		6A6C38A32B94FF0A00698B99 /* PlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C38A22B94FF0A00698B99 /* PlayerBar.swift */; };
+		6A6C38A52B9543BE00698B99 /* SpotifyWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6C38A42B9543BE00698B99 /* SpotifyWebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +41,8 @@
 		6A6BD6C12B93DD7C0002E8AB /* MelodyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MelodyTests.swift; sourceTree = "<group>"; };
 		6A6BD6CC2B93F71D0002E8AB /* theme.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = theme.css; sourceTree = "<group>"; };
 		6A6BD6CE2B9401C40002E8AB /* script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
+		6A6C38A22B94FF0A00698B99 /* PlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBar.swift; sourceTree = "<group>"; };
+		6A6C38A42B9543BE00698B99 /* SpotifyWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyWebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +86,7 @@
 		6A6BD6AA2B93DD7B0002E8AB /* Melody */ = {
 			isa = PBXGroup;
 			children = (
+				6A6C38A12B94FEF500698B99 /* Views */,
 				6A6BD6CC2B93F71D0002E8AB /* theme.css */,
 				6A6BD6CE2B9401C40002E8AB /* script.js */,
 				6A6BD6AF2B93DD7B0002E8AB /* MelodyApp.swift */,
@@ -115,6 +120,15 @@
 				6A6BD6C12B93DD7C0002E8AB /* MelodyTests.swift */,
 			);
 			path = MelodyTests;
+			sourceTree = "<group>";
+		};
+		6A6C38A12B94FEF500698B99 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6A6C38A22B94FF0A00698B99 /* PlayerBar.swift */,
+				6A6C38A42B9543BE00698B99 /* SpotifyWebView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,7 +236,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A6C38A32B94FF0A00698B99 /* PlayerBar.swift in Sources */,
 				6A6BD6B22B93DD7B0002E8AB /* ContentView.swift in Sources */,
+				6A6C38A52B9543BE00698B99 /* SpotifyWebView.swift in Sources */,
 				6A6BD6B02B93DD7B0002E8AB /* MelodyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
