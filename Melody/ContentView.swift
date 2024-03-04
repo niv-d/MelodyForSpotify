@@ -133,6 +133,14 @@ struct ContentView: View {
         .tag(1).onAppear {
           viewModel.goSearch()
         }
+        
+        Text("").tabItem {
+          Label("Reload Player", systemImage: "arrow.clockwise")
+        }
+        .tag(2).onAppear {
+          viewModel.goSearch()
+        }
+
       }
       .toolbar {
         ToolbarItemGroup(placement: .bottomOrnament) {
