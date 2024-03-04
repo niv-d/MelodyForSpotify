@@ -11,20 +11,15 @@ struct PlayerBar: View {
   let viewModel: WebViewModel
 
   var body: some View {
-    HStack(spacing: 2) {
+    HStack(spacing: 5) {
       PlayerButton(image: "backward.fill", toggled: false, action: { viewModel.mediaPrevious() })
 
-      PlayerButton(image: "playpause.fill", toggled: false, action: { viewModel.mediaPlayPause() })
+      //pause.circle.fill
+      PlayerButton(image: "play.fill", toggled: false, action: { viewModel.mediaPlayPause() })
 
       PlayerButton(image: "forward.fill", toggled: false, action: { viewModel.mediaNext() })
 
       NowPlaying()
-
-      PlayerButton(image: "heart", toggled: false, action: { viewModel.mediaHeart() })
-
-      PlayerButton(image: "shuffle", toggled: false, action: { viewModel.mediaShuffle() })
-
-      PlayerButton(image: "repeat", toggled: false, action: { viewModel.mediaRepeat() })
 
       PlayerButton(image: "list.bullet", toggled: false, action: { viewModel.mediaQueue() })
 
@@ -45,7 +40,11 @@ struct PlayerButton: View {
         .foregroundColor(toggled ? Color.black : Color.white)
         .background(Color.white.opacity(toggled ? 1 : 0))
         .clipShape(Circle())
-    }.clipShape(Circle())
+        .imageScale(.medium)
+    }
+    .clipShape(Circle())
+    .frame(width: 35, height: 35)
+    .padding(.horizontal, 10)
   }
 }
 
@@ -69,14 +68,20 @@ class PlayerViewModel: ObservableObject {
 struct NowPlaying: View {
   @ObservedObject var viewModel: PlayerViewModel = PlayerViewModel()
   @State private var isDragging: Bool = false
-
+  @State private var showingMenu = false
   var body: some View {
     VStack {
       ZStack {
+//        RoundedRectangle(cornerRadius: 15)
+//          .fill(Color.black.opacity(0.2))
+//          .frame(height: 60)
+        
         RoundedRectangle(cornerRadius: 15)
-          .fill(Color.black.opacity(0.2))
-          .frame(height: 70)
-
+          .fill(Color.black.opacity(0.2)) // Base fill with some transparency
+          .frame(height: 60)
+          .shadow(color: Color.black.opacity(0.2), radius: 3, x: 5, y: 5) // Inset shadow
+          .padding()
+        
         //Song info
         VStack {
           HStack {
@@ -99,11 +104,11 @@ struct NowPlaying: View {
             VStack(alignment: .leading) {
               //TODO: State
               Text("Pretty When You Cry")
-                .font(.headline)
+                .font(.body)
                 .foregroundColor(.white)
               if !isDragging {
                 Text("VAST")
-                  .font(.subheadline)
+                  .font(.callout)
                   .foregroundColor(Color.white.opacity(0.7))
               }
 
@@ -113,13 +118,22 @@ struct NowPlaying: View {
             }
             if !isDragging {
               Spacer()
-              Button(action: {
-              }) {
-                Image(systemName: "ellipsis")
-                  .foregroundColor(.white)
+              PlayerButton(image: "ellipsis", toggled: false, action: { showingMenu = true })
+              .sheet(isPresented: $showingMenu) {
+                VStack(spacing: 20){
+                  HStack(spacing: 20){
+                    PlayerButton(image: "heart", toggled: false, action: {  })
+                    
+                    PlayerButton(image: "shuffle", toggled: false, action: {  })
+                    
+                    PlayerButton(image: "repeat", toggled: false, action: {  })
+                  }
+                  PlayerButton(image: "x.circle.fill", toggled: false, action: { showingMenu = false })
+                }
+                
               }
             } else {
-              Text(timeString(seconds: viewModel.totalDuration))
+              Text("-" + timeString(seconds: viewModel.totalDuration-viewModel.playbackPosition))
                 .foregroundColor(.white)
                 .font(.caption)
                 .frame(minWidth: 40)
@@ -143,15 +157,13 @@ struct NowPlaying: View {
               }
             }
           )
-          .controlSize(isDragging ? .regular : .mini)
-//          .scaleEffect(CGSize(width: 1.0, height: isDragging ? 1 : 0.1))
-          .accentColor(.white).frame(maxHeight: .infinity, alignment: .bottom)
-          .offset(CGSize(width:0, height: isDragging ? 0 : 10.0))
+          .controlSize(isDragging ? .small : .mini)
+          .accentColor(.white)
+          .padding(.vertical, isDragging ? -5 : -10)
         }
-//        .ignoresSafeArea().frame(maxHeight: .infinity, alignment: .bottom)
       }.clipShape(RoundedRectangle(cornerRadius: 15))
     }
-    .frame(width: 400, height: 70)
+    .frame(width: 400, height: 60)
     .padding(.horizontal)
   }
 
