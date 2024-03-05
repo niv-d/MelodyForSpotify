@@ -39,19 +39,6 @@ struct SpotifyWebView: UIViewRepresentable {
   func updateUIView(_ uiView: WKWebView, context: Context) {
   }
   
-  func readPageContent(completion: @escaping (String?, Error?) -> Void) {
-    let js = "document.body.innerText"  // JavaScript to get all text content from the body
-    webView.evaluateJavaScript(js) { result, error in
-      if let error = error {
-        completion(nil, error)
-        return
-      }
-      if let content = result as? String {
-        completion(content, nil)
-      }
-    }
-  }
-  
   func makeCoordinator() -> Coordinator {
     Coordinator(self)
   }
@@ -129,12 +116,10 @@ struct SpotifyWebView: UIViewRepresentable {
       }
       if message.name == "pushState" , let messageBody = message.body as? String {
         DispatchQueue.main.async {
-          // Deserialize JSON string into Swift object
           let jsonData = Data(messageBody.utf8)
           self.parent.log("Got state \(jsonData)")
           let decoder = JSONDecoder()
           if let yourData = try? decoder.decode(SpotifyState.self, from: jsonData) {
-            // Update your view model here using the deserialized data
             self.parent.viewModel.update(with: yourData)
             self.parent.log(yourData)
           }
