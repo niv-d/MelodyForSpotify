@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerBar: View {
-  @ObservedObject var viewModel: WebViewModel
+  @ObservedObject var viewModel: SpotifyWebViewState
 
   var body: some View {
     HStack(spacing: 5) {
@@ -64,7 +64,7 @@ struct TextButton: View {
 }
 
 struct NowPlaying: View {
-  @ObservedObject var viewModel: WebViewModel
+  @ObservedObject var viewModel: SpotifyWebViewState
   @State private var isDragging: Bool = false
   @State private var showingMenu = false
   var body: some View {

@@ -10,7 +10,7 @@ import WebKit
 
 struct SpotifyWebView: UIViewRepresentable {
   let webView: WKWebView
-  let viewModel: WebViewModel
+  let viewModel: SpotifyWebViewState
   
   private func log(
     _ items: Any...,
