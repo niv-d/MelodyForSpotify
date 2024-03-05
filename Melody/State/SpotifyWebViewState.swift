@@ -18,6 +18,7 @@ class SpotifyWebViewState: ObservableObject {
     let configuration = WKWebViewConfiguration()
     configuration.applicationNameForUserAgent =
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Safari/605.1.15"
+    webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Safari/605.1.15"
     
     webView = WKWebView(frame: .zero, configuration: configuration)
     self.spotifyState = SpotifyState()
