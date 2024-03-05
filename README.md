@@ -7,6 +7,7 @@ A spotify webview for visionOS, open source and free
 
 ## TODO:
 - General code cleanup and improvements
+- Clip webview so the edges don't look stupid
 - Change audio to ambient to play sound over other applications
 - Fix seek bar
 - Add some tweaks to the glass css so it looks less plane
