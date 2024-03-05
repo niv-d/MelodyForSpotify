@@ -23,9 +23,13 @@ struct PlayerBar: View {
 
       NowPlaying(viewModel: viewModel)
 
-      PlayerButton(image: "list.bullet", toggled: viewModel.spotifyState.queue, action: { viewModel.mediaQueue() })
+      PlayerButton(
+        image: "list.bullet", toggled: viewModel.spotifyState.queue,
+        action: { viewModel.mediaQueue() })
 
-      PlayerButton(image: "music.mic", toggled: viewModel.spotifyState.lyrics, action: { viewModel.mediaLyrics() })
+      PlayerButton(
+        image: "music.mic", toggled: viewModel.spotifyState.lyrics,
+        action: { viewModel.mediaLyrics() })
     }
   }
 }
@@ -80,7 +84,7 @@ class PlayerViewModel: ObservableObject {
 
 struct NowPlaying: View {
   @ObservedObject var viewModel: WebViewModel
-//  @ObservedObject var viewModelPlayer: PlayerViewModel = PlayerViewModel()
+  //  @ObservedObject var viewModelPlayer: PlayerViewModel = PlayerViewModel()
   @State private var isDragging: Bool = false
   @State private var showingMenu = false
   var body: some View {
@@ -92,7 +96,7 @@ struct NowPlaying: View {
 
         RoundedRectangle(cornerRadius: 15)
           .fill(Color.black.opacity(0.1))
-          .frame(height: 60)	
+          .frame(height: 70)
           .shadow(color: Color.black.opacity(0.5), radius: 3, x: -3, y: -3)
           .shadow(color: Color.white.opacity(0.5), radius: 3, x: 3, y: 3)
 
@@ -101,16 +105,16 @@ struct NowPlaying: View {
           HStack {
             if !isDragging {
               //TODO: State
-                AsyncImage(url: URL(string: viewModel.spotifyState.albumImage)) { image in
-                  // Successfully loaded the image. Display it.
-                  image.resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 50, height: 50)
-                    .cornerRadius(5)
-                } placeholder: {
-                  // Placeholder content to display while the image is loading.
-                  ProgressView()
-                }
+              AsyncImage(url: URL(string: viewModel.spotifyState.albumImage)) { image in
+                // Successfully loaded the image. Display it.
+                image.resizable()
+                  .aspectRatio(contentMode: .fit)
+                  .frame(width: 50, height: 50)
+                  .cornerRadius(5)
+              } placeholder: {
+                // Placeholder content to display while the image is loading.
+                ProgressView()
+              }
             } else {
               Text(timeString(seconds: viewModel.spotifyState.songPosition))
                 .foregroundColor(.white)
@@ -141,14 +145,17 @@ struct NowPlaying: View {
               PlayerButton(image: "ellipsis", toggled: false, action: { showingMenu = true })
                 .sheet(isPresented: $showingMenu) {
                   VStack(spacing: 10) {
-                    TextButton(action: {}, text: viewModel.spotifyState.songName)  //Opens the now playing widget on the side
-                    TextButton(action: {}, text: viewModel.spotifyState.artistName)
-                    TextButton(action: {}, text: "Album")
+                    TextButton(
+                      action: { viewModel.goSongInfo() }, text: viewModel.spotifyState.songName)  //Opens the now playing widget on the side
+                    TextButton(
+                      action: { viewModel.goArtist() }, text: viewModel.spotifyState.artistName)
+                    TextButton(action: { viewModel.goAlbum() }, text: "Album")
                     Divider()
                       .background(Color.gray)
                     HStack(spacing: 20) {
                       PlayerButton(
-                        image: viewModel.spotifyState.heart ? "heart.fill" : "heart", toggled: viewModel.spotifyState.heart, action: { viewModel.mediaHeart() })
+                        image: viewModel.spotifyState.heart ? "heart.fill" : "heart",
+                        toggled: viewModel.spotifyState.heart, action: { viewModel.mediaHeart() })
 
                       PlayerButton(
                         image: "shuffle", toggled: viewModel.spotifyState.shuffle,
@@ -160,12 +167,12 @@ struct NowPlaying: View {
                         toggled: viewModel.spotifyState.repeatMode != SpotifyState.RepeatMode.none,
                         action: { viewModel.mediaRepeat() })
                     }
-                    Divider()
-                      .background(Color.gray)
+//                    Divider()
+//                      .background(Color.gray)
                     //TODO: Checkboxes instead?
-                    TextButton(action: {}, text: "DMR-PC")
-                    TextButton(action: {}, text: "nvd-std")
-                    TextButton(action: {}, text: "Web Player (Microsoft Edge)")
+                    //                    TextButton(action: {}, text: "DMR-PC")
+                    //                    TextButton(action: {}, text: "nvd-std")
+                    //                    TextButton(action: {}, text: "Web Player (Microsoft Edge)")
                     Divider()
                       .background(Color.gray)
                     PlayerButton(
@@ -177,7 +184,8 @@ struct NowPlaying: View {
               Text(
                 "-"
                   + timeString(
-                    seconds: viewModel.spotifyState.songLength - viewModel.spotifyState.songPosition)
+                    seconds: viewModel.spotifyState.songLength - viewModel.spotifyState.songPosition
+                  )
               )
               .foregroundColor(.white)
               .font(.caption)
@@ -210,7 +218,7 @@ struct NowPlaying: View {
         }
       }.clipShape(RoundedRectangle(cornerRadius: 15))
     }
-    .frame(width: 400, height: 60)
+    .frame(width: 400, height: 70)
     .padding(.horizontal)
   }
 

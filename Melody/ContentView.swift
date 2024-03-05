@@ -66,9 +66,9 @@ class WebViewModel: ObservableObject {
   func update(with data: SpotifyState) {
     self.spotifyState = data
   }
-  
-  func songPositionChanged(to newValue: Double){
-    self.spotifyState.songPosition = newValue;
+
+  func songPositionChanged(to newValue: Double) {
+    self.spotifyState.songPosition = newValue
   }
 
   func goHome() {
@@ -77,6 +77,18 @@ class WebViewModel: ObservableObject {
 
   func goSearch() {
     touchAriaLabel(label: String("Search"))
+  }
+
+  func goArtist() {
+    touchTestID(id: String("context-item-info-artist"))
+  }
+
+  func goAlbum() {
+    touchTestID(id: String("context-item-link"))
+  }
+
+  func goSongInfo() {
+    touchAriaLabel(label: "Now playing view")
   }
 
   func mediaPlayPause() {
@@ -192,8 +204,9 @@ struct ContentView: View {
     }
     .overlay(
       SpotifyWebView(webView: viewModel.webView, viewModel: viewModel)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-    ).clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+    )
   }
 }
 
