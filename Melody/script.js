@@ -39,25 +39,25 @@ setTimeout(() => {
       let playing =
         document
           .querySelector('button[data-testid="control-button-playpause"]')
-          .getAttribute("aria-label") === "Pause";
+          ?.getAttribute("aria-label") === "Pause";
       let songLength = document.querySelector(
         'div[data-testid="playback-duration"]'
-      ).innerHTML;
+      )?.innerHTML;
       //Regex for --progress-bar-transform: 9.663865546218489%;
       const regex = /--progress-bar-transform: (\d+.\d+)%/;
       let songPercent = document
         .querySelector('div[data-testid="progress-bar"]')
-        .style.cssText.match(regex)[1];
+        ?.style.cssText.match(regex)[1];
       let songPosition = document.querySelector(
         'div[data-testid="playback-position"]'
-      ).innerHTML;
+      )?.innerHTML;
       let heart =
         document
           .querySelector('button[data-testid="add-button"]')
-          .getAttribute("aria-checked") === "true";
+          ?.getAttribute("aria-checked") === "true";
       let repeat = document
         .querySelector('button[data-testid="control-button-repeat"]')
-        .getAttribute("aria-label");
+        ?.getAttribute("aria-label");
       switch (repeat) {
         case "Enable repeat":
           repeat = "none";
@@ -72,14 +72,14 @@ setTimeout(() => {
       let shuffle =
         document
           .querySelector('button[data-testid="control-button-shuffle"]')
-          .getAttribute("aria-checked") === "true";
+          ?.getAttribute("aria-checked") === "true";
       //TODO: Get device name
       let songName = document.querySelector(
         'a[data-testid="context-item-link"]'
-      ).innerHTML;
+      )?.innerHTML;
       let artistName = document.querySelector(
         'a[data-testid="context-item-info-artist"]'
-      ).innerHTML;
+      )?.innerHTML;
       //TODO: Album name
       let albumImage = document.querySelector(
         'img[data-testid="cover-art-image"]'
