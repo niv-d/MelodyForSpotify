@@ -6,6 +6,7 @@ A spotify webview for visionOS, open source and free
 - Native player controls
 
 ## TODO:
+- Move these to a project board
 - General code cleanup and improvements
 - Clip webview so the edges don't look stupid
 - Change audio to ambient to play sound over other applications
@@ -15,7 +16,7 @@ A spotify webview for visionOS, open source and free
 - Improve responsiveness of controls
 - Add miniplayer/album cover player
 
-## Prievews:
+## Previews:
 ![image](https://github.com/niv-d/MelodyForSpotify/assets/4766858/774dccff-7cc4-4067-8f9e-aa87970c59e9)
 ![image](https://github.com/niv-d/MelodyForSpotify/assets/4766858/ae19bbca-db40-41b0-88c8-2ce533395eb0)
 ![image](https://github.com/niv-d/MelodyForSpotify/assets/4766858/e804c3a6-74fa-47bf-8104-c98c16dd04ac)
