@@ -192,7 +192,8 @@ struct ContentView: View {
           Label("Reload Player", systemImage: "arrow.clockwise")
         }
         .tag(2).onAppear {
-          viewModel.goSearch()
+          viewModel.webView.reload()
+          selectedTab = 0
         }
 
       }
