@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A256C7A2B97898800FE8538 /* SpotifyWebViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A256C792B97898800FE8538 /* SpotifyWebViewState.swift */; };
 		6A6BD6AE2B93DD7B0002E8AB /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 6A6BD6AD2B93DD7B0002E8AB /* RealityKitContent */; };
 		6A6BD6B02B93DD7B0002E8AB /* MelodyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6BD6AF2B93DD7B0002E8AB /* MelodyApp.swift */; };
 		6A6BD6B22B93DD7B0002E8AB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6BD6B12B93DD7B0002E8AB /* ContentView.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6A256C792B97898800FE8538 /* SpotifyWebViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyWebViewState.swift; sourceTree = "<group>"; };
 		6A6BD6A82B93DD7B0002E8AB /* Melody.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Melody.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A6BD6AC2B93DD7B0002E8AB /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		6A6BD6AF2B93DD7B0002E8AB /* MelodyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MelodyApp.swift; sourceTree = "<group>"; };
@@ -64,6 +66,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A256C782B97895100FE8538 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				6A256C792B97898800FE8538 /* SpotifyWebViewState.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
 		6A6BD69F2B93DD7A0002E8AB = {
 			isa = PBXGroup;
 			children = (
@@ -86,6 +96,7 @@
 		6A6BD6AA2B93DD7B0002E8AB /* Melody */ = {
 			isa = PBXGroup;
 			children = (
+				6A256C782B97895100FE8538 /* State */,
 				6A6C38A12B94FEF500698B99 /* Views */,
 				6A6BD6CC2B93F71D0002E8AB /* theme.css */,
 				6A6BD6CE2B9401C40002E8AB /* script.js */,
@@ -240,6 +251,7 @@
 				6A6BD6B22B93DD7B0002E8AB /* ContentView.swift in Sources */,
 				6A6C38A52B9543BE00698B99 /* SpotifyWebView.swift in Sources */,
 				6A6BD6B02B93DD7B0002E8AB /* MelodyApp.swift in Sources */,
+				6A256C7A2B97898800FE8538 /* SpotifyWebViewState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
