@@ -10,16 +10,47 @@ import RealityKitContent
 import SwiftUI
 import WebKit
 
+struct SpotifyState: Codable {
+  var albumImage: String = ""
+  var albumName: String = ""
+  var artistName: String = ""
+  var device: String = ""
+  var heart: Bool = false
+  var lyrics: Bool = false
+  var playing: Bool = false
+  var queue: Bool = false
+  var repeatMode: RepeatMode = RepeatMode.none
+  var shuffle: Bool = false
+  var songLength: Double = 0
+  var songName: String = ""
+  var songPercent: Double = 0
+  var songPosition: Double = 0
+
+  enum CodingKeys: String, CodingKey {
+    case playing, songLength, songPercent, songPosition, heart, shuffle, device, songName,
+      artistName, albumName, albumImage, queue, lyrics
+    case repeatMode = "repeat"
+  }
+
+  enum RepeatMode: String, Codable {
+    case none = "none"
+    case one = "one"
+    case all = "all"
+  }
+}
+
 class WebViewModel: ObservableObject {
   var webView: WKWebView = WKWebView()
   @Published var currentPlaybackTime: Double = 0
+  @Published var spotifyState: SpotifyState
 
   init() {
     let configuration = WKWebViewConfiguration()
     configuration.applicationNameForUserAgent =
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Safari/605.1.15"
-    
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Safari/605.1.15"
+
     webView = WKWebView(frame: .zero, configuration: configuration)
+    self.spotifyState = SpotifyState()
   }
 
   private func log(
@@ -32,8 +63,16 @@ class WebViewModel: ObservableObject {
     print("\(prefix):\n \(message)", terminator: terminator)
   }
 
+  func update(with data: SpotifyState) {
+    self.spotifyState = data
+  }
+  
+  func songPositionChanged(to newValue: Double){
+    self.spotifyState.songPosition = newValue;
+  }
+
   func goHome() {
-     touchAriaLabel(label: String("Home"))
+    touchAriaLabel(label: String("Home"))
   }
 
   func goSearch() {
@@ -94,6 +133,9 @@ class WebViewModel: ObservableObject {
         } else {
             console.log('\(query) not found');
         }
+        setTimeout(()=>{
+          window.getState && window.getState();
+        }, 500)
       })()
       """
     runJavascript(script: script)
@@ -133,7 +175,7 @@ struct ContentView: View {
         .tag(1).onAppear {
           viewModel.goSearch()
         }
-        
+
         Text("").tabItem {
           Label("Reload Player", systemImage: "arrow.clockwise")
         }
@@ -149,9 +191,9 @@ struct ContentView: View {
       }
     }
     .overlay(
-      SpotifyWebView(webView: viewModel.webView)
+      SpotifyWebView(webView: viewModel.webView, viewModel: viewModel)
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-    )
+    ).clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
   }
 }
 

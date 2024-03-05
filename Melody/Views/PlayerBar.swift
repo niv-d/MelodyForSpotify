@@ -8,22 +8,24 @@
 import SwiftUI
 
 struct PlayerBar: View {
-  let viewModel: WebViewModel
+  @ObservedObject var viewModel: WebViewModel
 
   var body: some View {
     HStack(spacing: 5) {
       PlayerButton(image: "backward.fill", toggled: false, action: { viewModel.mediaPrevious() })
 
       //pause.circle.fill
-      PlayerButton(image: "play.fill", toggled: false, action: { viewModel.mediaPlayPause() })
+      PlayerButton(
+        image: viewModel.spotifyState.playing ? "pause.fill" : "play.fill", toggled: false,
+        action: { viewModel.mediaPlayPause() })
 
       PlayerButton(image: "forward.fill", toggled: false, action: { viewModel.mediaNext() })
 
-      NowPlaying()
+      NowPlaying(viewModel: viewModel)
 
-      PlayerButton(image: "list.bullet", toggled: false, action: { viewModel.mediaQueue() })
+      PlayerButton(image: "list.bullet", toggled: viewModel.spotifyState.queue, action: { viewModel.mediaQueue() })
 
-      PlayerButton(image: "music.mic", toggled: false, action: { viewModel.mediaLyrics() })
+      PlayerButton(image: "music.mic", toggled: viewModel.spotifyState.lyrics, action: { viewModel.mediaLyrics() })
     }
   }
 }
@@ -48,11 +50,11 @@ struct PlayerButton: View {
   }
 }
 
-struct TextButton: View{
-  let action: ()->Void
+struct TextButton: View {
+  let action: () -> Void
   let text: String
   var body: some View {
-    Button(action: action){
+    Button(action: action) {
       Text(text)
     }
   }
@@ -77,34 +79,40 @@ class PlayerViewModel: ObservableObject {
 }
 
 struct NowPlaying: View {
-  @ObservedObject var viewModel: PlayerViewModel = PlayerViewModel()
+  @ObservedObject var viewModel: WebViewModel
+//  @ObservedObject var viewModelPlayer: PlayerViewModel = PlayerViewModel()
   @State private var isDragging: Bool = false
   @State private var showingMenu = false
   var body: some View {
     VStack {
       ZStack {
-//        RoundedRectangle(cornerRadius: 15)
-//          .fill(Color.black.opacity(0.2))
-//          .frame(height: 60)
-        
+        //        RoundedRectangle(cornerRadius: 15)
+        //          .fill(Color.black.opacity(0.2))
+        //          .frame(height: 60)
+
         RoundedRectangle(cornerRadius: 15)
           .fill(Color.black.opacity(0.1))
-          .frame(height: 60)
+          .frame(height: 60)	
           .shadow(color: Color.black.opacity(0.5), radius: 3, x: -3, y: -3)
           .shadow(color: Color.white.opacity(0.5), radius: 3, x: 3, y: 3)
-        
+
         //Song info
         VStack {
           HStack {
             if !isDragging {
               //TODO: State
-              Image("albumArtwork")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 50, height: 50)
-                .cornerRadius(5)
+                AsyncImage(url: URL(string: viewModel.spotifyState.albumImage)) { image in
+                  // Successfully loaded the image. Display it.
+                  image.resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 50, height: 50)
+                    .cornerRadius(5)
+                } placeholder: {
+                  // Placeholder content to display while the image is loading.
+                  ProgressView()
+                }
             } else {
-              Text(timeString(seconds: viewModel.playbackPosition))
+              Text(timeString(seconds: viewModel.spotifyState.songPosition))
                 .foregroundColor(.white)
                 .font(.caption)
                 .frame(minWidth: 40)
@@ -115,11 +123,11 @@ struct NowPlaying: View {
             }
             VStack(alignment: .leading) {
               //TODO: State
-              Text("Pretty When You Cry")
+              Text(viewModel.spotifyState.songName)
                 .font(.caption2)
                 .foregroundColor(.white)
               if !isDragging {
-                Text("VAST")
+                Text(viewModel.spotifyState.artistName)
                   .font(.caption2)
                   .foregroundColor(Color.white.opacity(0.7))
               }
@@ -131,55 +139,67 @@ struct NowPlaying: View {
             if !isDragging {
               Spacer()
               PlayerButton(image: "ellipsis", toggled: false, action: { showingMenu = true })
-              .sheet(isPresented: $showingMenu) {
-                VStack(spacing: 10){
-                  TextButton(action: {}, text:"Song") //Opens the now playing widget on the side
-                  TextButton(action: {}, text:"Author")
-                  TextButton(action: {}, text:"Album")
-                  Divider()
-                    .background(Color.gray)
-                  HStack(spacing: 20){
-                    PlayerButton(image: "heart", toggled: false, action: {  })
-                    
-                    PlayerButton(image: "shuffle", toggled: false, action: {  })
-                    
-                    PlayerButton(image: "repeat", toggled: false, action: {  })
-                  }
-                  Divider()
-                    .background(Color.gray)
-                  //TODO: Checkboxes instead?
-                  TextButton(action: {}, text:"DMR-PC")
-                  TextButton(action: {}, text:"nvd-std")
-                  TextButton(action: {}, text:"Web Player (Microsoft Edge)")
-                  Divider()
-                    .background(Color.gray)
-                  PlayerButton(image: "x.circle.fill", toggled: false, action: { showingMenu = false })
-                }.padding(15)
-                
-              }
+                .sheet(isPresented: $showingMenu) {
+                  VStack(spacing: 10) {
+                    TextButton(action: {}, text: viewModel.spotifyState.songName)  //Opens the now playing widget on the side
+                    TextButton(action: {}, text: viewModel.spotifyState.artistName)
+                    TextButton(action: {}, text: "Album")
+                    Divider()
+                      .background(Color.gray)
+                    HStack(spacing: 20) {
+                      PlayerButton(
+                        image: viewModel.spotifyState.heart ? "heart.fill" : "heart", toggled: viewModel.spotifyState.heart, action: { viewModel.mediaHeart() })
+
+                      PlayerButton(
+                        image: "shuffle", toggled: viewModel.spotifyState.shuffle,
+                        action: { viewModel.mediaShuffle() })
+
+                      PlayerButton(
+                        image: viewModel.spotifyState.repeatMode == SpotifyState.RepeatMode.one
+                          ? "repeat.1" : "repeat",
+                        toggled: viewModel.spotifyState.repeatMode != SpotifyState.RepeatMode.none,
+                        action: { viewModel.mediaRepeat() })
+                    }
+                    Divider()
+                      .background(Color.gray)
+                    //TODO: Checkboxes instead?
+                    TextButton(action: {}, text: "DMR-PC")
+                    TextButton(action: {}, text: "nvd-std")
+                    TextButton(action: {}, text: "Web Player (Microsoft Edge)")
+                    Divider()
+                      .background(Color.gray)
+                    PlayerButton(
+                      image: "x.circle.fill", toggled: false, action: { showingMenu = false })
+                  }.padding(15)
+
+                }
             } else {
-              Text("-" + timeString(seconds: viewModel.totalDuration-viewModel.playbackPosition))
-                .foregroundColor(.white)
-                .font(.caption)
-                .frame(minWidth: 40)
-                .monospacedDigit()
+              Text(
+                "-"
+                  + timeString(
+                    seconds: viewModel.spotifyState.songLength - viewModel.spotifyState.songPosition)
+              )
+              .foregroundColor(.white)
+              .font(.caption)
+              .frame(minWidth: 40)
+              .monospacedDigit()
             }
           }
           .padding([.leading, .trailing], 10)
           .padding([.top, .bottom], isDragging ? 15 : 5)
-          if(isDragging){
+          if isDragging {
             Spacer()
           }
         }
         VStack(alignment: .trailing) {
           Spacer()
           Slider(
-            value: $viewModel.playbackPosition,
-            in: 0...viewModel.totalDuration,
+            value: $viewModel.spotifyState.songPosition,
+            in: 0...viewModel.spotifyState.songLength,
             onEditingChanged: { editing in
               isDragging = editing
               if !editing {
-                viewModel.sliderValueChanged(to: viewModel.playbackPosition)
+                viewModel.songPositionChanged(to: viewModel.spotifyState.songPosition)
               }
             }
           )

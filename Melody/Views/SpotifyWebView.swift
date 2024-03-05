@@ -10,6 +10,7 @@ import WebKit
 
 struct SpotifyWebView: UIViewRepresentable {
   let webView: WKWebView
+  let viewModel: WebViewModel
   
   private func log(
     _ items: Any...,
@@ -24,6 +25,8 @@ struct SpotifyWebView: UIViewRepresentable {
   func makeUIView(context: Context) -> WKWebView {
     webView.configuration.userContentController.add(
       context.coordinator as WKScriptMessageHandler, name: "consoleLog")
+    webView.configuration.userContentController.add(
+      context.coordinator as WKScriptMessageHandler, name: "pushState")
     webView.navigationDelegate = context.coordinator
     webView.load(URLRequest(url: URL(string: "https://accounts.spotify.com/en/login")!))
     // webView.load(URLRequest(url: URL(string: "https://open.spotify.com")!))
@@ -117,11 +120,25 @@ struct SpotifyWebView: UIViewRepresentable {
       }
       
     }
+    
     func userContentController(
       _ userContentController: WKUserContentController, didReceive message: WKScriptMessage
     ) {
       if message.name == "consoleLog", let log = message.body as? String {
         parent.log("Message from console.log: \(log)")
+      }
+      if message.name == "pushState" , let messageBody = message.body as? String {
+        DispatchQueue.main.async {
+          // Deserialize JSON string into Swift object
+          let jsonData = Data(messageBody.utf8)
+          self.parent.log("Got state \(jsonData)")
+          let decoder = JSONDecoder()
+          if let yourData = try? decoder.decode(SpotifyState.self, from: jsonData) {
+            // Update your view model here using the deserialized data
+            self.parent.viewModel.update(with: yourData)
+            self.parent.log(yourData)
+          }
+        }
       }
     }
   }
