@@ -14,7 +14,6 @@ struct PlayerBar: View {
     HStack(spacing: 5) {
       PlayerButton(image: "backward.fill", toggled: false, action: { viewModel.mediaPrevious() })
 
-      //pause.circle.fill
       PlayerButton(
         image: viewModel.spotifyState.playing ? "pause.fill" : "play.fill", toggled: false,
         action: { viewModel.mediaPlayPause() })
@@ -64,27 +63,8 @@ struct TextButton: View {
   }
 }
 
-class PlayerViewModel: ObservableObject {
-  @Published var playbackPosition: Double = 30
-  @Published var isPlaying: Bool = false
-  var totalDuration: Double = 300  // Replace with the actual duration of the media
-
-  // Call this method when the slider value changes
-  func sliderValueChanged(to newValue: Double) {
-    playbackPosition = newValue
-    // Update the playback time of your media player here
-  }
-
-  // Call this method to toggle playback state
-  func togglePlayPause() {
-    isPlaying.toggle()
-    // Handle play/pause of your media player here
-  }
-}
-
 struct NowPlaying: View {
   @ObservedObject var viewModel: WebViewModel
-  //  @ObservedObject var viewModelPlayer: PlayerViewModel = PlayerViewModel()
   @State private var isDragging: Bool = false
   @State private var showingMenu = false
   var body: some View {
@@ -106,13 +86,11 @@ struct NowPlaying: View {
             if !isDragging {
               //TODO: State
               AsyncImage(url: URL(string: viewModel.spotifyState.albumImage)) { image in
-                // Successfully loaded the image. Display it.
                 image.resizable()
                   .aspectRatio(contentMode: .fit)
                   .frame(width: 50, height: 50)
                   .cornerRadius(5)
               } placeholder: {
-                // Placeholder content to display while the image is loading.
                 ProgressView()
               }
             } else {
@@ -126,7 +104,6 @@ struct NowPlaying: View {
               Spacer()
             }
             VStack(alignment: .leading) {
-              //TODO: State
               Text(viewModel.spotifyState.songName)
                 .font(.caption2)
                 .foregroundColor(.white)
@@ -222,7 +199,6 @@ struct NowPlaying: View {
     .padding(.horizontal)
   }
 
-  // Convert time in seconds to a formatted string
   private func timeString(seconds: Double) -> String {
     let totalSeconds = Int(seconds)
     let minutes = totalSeconds / 60

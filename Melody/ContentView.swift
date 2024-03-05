@@ -141,10 +141,11 @@ class WebViewModel: ObservableObject {
         const targetedButton = document.querySelector('\(query)');
         if (targetedButton) {
             targetedButton.click();
-            console.log('found the button, clicked on it');
+            console.log('found the \(query), clicked on it');
         } else {
             console.log('\(query) not found');
         }
+        //TODO: this doesn't work... really at all.
         setTimeout(()=>{
           window.getState && window.getState();
         }, 500)
