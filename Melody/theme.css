@@ -103,3 +103,8 @@ footer{
 .loggedout_menubar{
   display: none !important;
 }
+
+/* Hide data-tippy-root */
+[data-tippy-root]{
+  display: none !important;
+}
