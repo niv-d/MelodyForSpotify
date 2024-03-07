@@ -73,3 +73,15 @@
 footer{
   display: none !important;
 }
+
+/* Hide signup / pay features */
+
+#sign-up-section{
+  display: none !important;
+}
+#account-settings-link{
+  display: none !important;
+}
+.ERyo7m5f00o7ToFdGMCD ul li:first-child{
+  display: none !important;
+}
