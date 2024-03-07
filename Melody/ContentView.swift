@@ -68,7 +68,7 @@ struct ContentView: View {
           Label("Reload Player", systemImage: "arrow.clockwise")
         }
         .tag(2).onAppear {
-          viewModel.webView.reload()
+          viewModel.webView.load(URLRequest(url: URL(string: "https://accounts.spotify.com/en/login")!))
           selectedTab = 0
         }
 
