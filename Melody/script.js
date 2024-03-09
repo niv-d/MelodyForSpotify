@@ -128,4 +128,6 @@ setTimeout(() => {
   setInterval(() => {
     window.getState();
   }, 850);
+
+  
 }, 400);
