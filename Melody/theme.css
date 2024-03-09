@@ -108,3 +108,10 @@ footer{
 [data-tippy-root]{
   display: none !important;
 }
+[data-testid="upgrade-button"]{
+  display: none !important;
+}
+
+a[href="https://www.spotify.com/premium/?ref=web_loggedin_upgrade_menu"]{
+  display: none !important;
+}
