@@ -15,9 +15,7 @@ struct MelodyApp: App {
   }
   var body: some Scene {
     WindowGroup {
-      ContentView().frame(
-        minWidth: 1000,
-        minHeight: 700)
+      ContentView().glassBackgroundEffect(displayMode: .always).cornerRadius(5)
     }.windowResizability(.contentSize)
   }
   

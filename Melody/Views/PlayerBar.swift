@@ -1,10 +1,3 @@
-//
-//  PlayerControlView.swift
-//  MusicPlayerUI-VisionOS
-//
-//  Created by Vinoth Vino on 22/07/23.
-//
-
 import SwiftUI
 
 struct PlayerBar: View {
@@ -74,11 +67,11 @@ struct NowPlaying: View {
         //          .fill(Color.black.opacity(0.2))
         //          .frame(height: 60)
 
-        RoundedRectangle(cornerRadius: 15)
-          .fill(Color.black.opacity(0.1))
-          .frame(height: 70)
-          .shadow(color: Color.black.opacity(0.5), radius: 3, x: -3, y: -3)
-          .shadow(color: Color.white.opacity(0.5), radius: 3, x: 3, y: 3)
+        // RoundedRectangle(cornerRadius: 15)
+        //   .fill(Color.black.opacity(0.1))
+        //   .frame(height: 70)
+        //   .shadow(color: Color.black.opacity(0.5), radius: 3, x: -3, y: -3)
+        //   .shadow(color: Color.white.opacity(0.5), radius: 3, x: 3, y: 3)
 
         //Song info
         VStack {
@@ -92,6 +85,8 @@ struct NowPlaying: View {
                   .cornerRadius(5)
               } placeholder: {
                 ProgressView()
+              }.onTapGesture {
+                viewModel.miniPlayer = 1
               }
             } else {
               Text(timeString(seconds: viewModel.spotifyState.songPosition))
@@ -190,13 +185,28 @@ struct NowPlaying: View {
           )
           .controlSize(isDragging ? .small : .mini)
           .accentColor(.white)
-          .padding(.vertical, isDragging ? -5 : -10)
+          .padding(.vertical, isDragging ? -5 : -15)
           .padding(.horizontal, -10)
         }
       }.clipShape(RoundedRectangle(cornerRadius: 15))
     }
     .frame(width: 400, height: 70)
     .padding(.horizontal)
+    .overlay {
+        RoundedRectangle(cornerSize: CGSize(width: 15, height: 15)).inset(by: -1)
+          .fill(.shadow(.inner(color:.black, radius: 3, y: 3)))
+          .stroke(
+            LinearGradient(
+              gradient:  Gradient(colors: [.black.opacity(0.2), .white.opacity(0.3) ]),
+              startPoint: .top,
+              endPoint: .bottom
+            ),
+            lineWidth: 1
+          )
+          .foregroundStyle(.black.opacity(0.2))
+          .opacity(1.0)
+          .allowsHitTesting(false)
+      }
   }
 
   private func timeString(seconds: Double) -> String {

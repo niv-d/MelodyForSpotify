@@ -13,6 +13,7 @@ class SpotifyWebViewState: ObservableObject {
   var webView: WKWebView = WKWebView()
   @Published var currentPlaybackTime: Double = 0
   @Published var spotifyState: SpotifyState
+  @Published var miniPlayer: Int = 1
   
   init() {
     let configuration = WKWebViewConfiguration()
