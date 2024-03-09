@@ -107,6 +107,7 @@ footer{
 /* Hide data-tippy-root */
 [data-tippy-root]{
   display: none !important;
+
 }
 [data-testid="upgrade-button"]{
   display: none !important;
