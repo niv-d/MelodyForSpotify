@@ -8,6 +8,34 @@
 import Foundation
 import WebKit
 
+struct SpotifyState: Codable {
+  var albumImage: String = ""
+  var albumName: String = ""
+  var artistName: String = ""
+  var device: String = ""
+  var heart: Bool = false
+  var lyrics: Bool = false
+  var playing: Bool = false
+  var queue: Bool = false
+  var repeatMode: RepeatMode = RepeatMode.none
+  var shuffle: Bool = false
+  var songLength: Double = 0
+  var songName: String = ""
+  var songPercent: Double = 0
+  var songPosition: Double = 0
+  
+  enum CodingKeys: String, CodingKey {
+    case playing, songLength, songPercent, songPosition, heart, shuffle, device, songName,
+         artistName, albumName, albumImage, queue, lyrics
+    case repeatMode = "repeat"
+  }
+  
+  enum RepeatMode: String, Codable {
+    case none = "none"
+    case one = "one"
+    case all = "all"
+  }
+}
 
 class SpotifyWebViewState: ObservableObject {
   var webView: WKWebView = WKWebView()
