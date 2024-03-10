@@ -57,7 +57,7 @@ struct ContentView: View {
           VStack(alignment: .leading, spacing: 8) {
             HStack {
               Button(action: { viewModel.miniPlayer = 0 }) {
-                Image(systemName: "square.and.arrow.up")
+                Image(systemName: "square.and.arrow.up.fill")
                   .foregroundColor(.white)
               }
               .buttonStyle(PlainButtonStyle())
@@ -144,26 +144,43 @@ struct ContentView: View {
       } else {
         TabView(selection: $selectedTab) {
           Text("").tabItem {
-            Label("Home", systemImage: "house")
+            Label("Spotify", systemImage: "house")
           }
           .tag(0)
           .onAppear {
             viewModel.goHome()
-          }.onTapGesture {
+            selectedTab = 0
+          }
+          Text("").tabItem {
+            Label("Home", systemImage: "house")
+          }
+          .tag(1)
+          .onAppear {
             viewModel.goHome()
+            selectedTab = 0
           }
 
           Text("").tabItem {
             Label("Search", systemImage: "magnifyingglass")
           }
-          .tag(1).onAppear {
+          .tag(2).onAppear {
             viewModel.goSearch()
+            selectedTab = 0
+          }
+
+          Text("").tabItem {
+            Label("Mini", systemImage: "square.and.arrow.down.fill")
+          }
+          .tag(3).onAppear {
+            viewModel.miniPlayer = 1
+            selectedTab = 0
           }
 
           Text("").tabItem {
             Label("Reload Player", systemImage: "arrow.clockwise")
+            selectedTab = 0
           }
-          .tag(2).onAppear {
+          .tag(4).onAppear {
             viewModel.webView.load(
               URLRequest(url: URL(string: "https://accounts.spotify.com/en/login")!))
             selectedTab = 0
