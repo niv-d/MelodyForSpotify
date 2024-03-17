@@ -42,7 +42,7 @@ class SpotifyWebViewState: ObservableObject {
   var webView: WKWebView = WKWebView()
   @Published var currentPlaybackTime: Double = 0
   @Published var spotifyState: SpotifyState
-  @Published var miniPlayer: Int = 1
+  @Published var miniPlayer: Int = 0
 
   init() {
     let configuration = WKWebViewConfiguration()
@@ -67,6 +67,24 @@ class SpotifyWebViewState: ObservableObject {
 
   func update(with data: SpotifyState) {
     self.spotifyState = data
+  }
+  
+  func prepareForMiniView(){
+    miniPlayer = 1
+    runJavascript(script: """
+      (function() {
+        const ariaLabel = "Now playing view";
+        const ariaPressed = "false";
+        const selector = `[aria-label="${ariaLabel}"][aria-pressed="${ariaPressed}"]`;
+        const element = document.querySelector(selector);
+        
+        if (element) {
+        element.click();
+        } else {
+        console.log('Element not found');
+        }
+      })();
+    """)
   }
 
   func songPositionChanged(to newValue: Double) {

@@ -93,11 +93,10 @@ setTimeout(() => {
         );
   
         //filter out the hqAlbumImage based on the larges image
-        if (hqAlbumImage && hqAlbumImage.length > 1) {
+        if (hqAlbumImage && hqAlbumImage.length) {
           hqAlbumImage = Array.from(hqAlbumImage).sort((a, b) => {
             return b.naturalWidth * b.naturalHeight - a.naturalWidth * a.naturalHeight;
           })[0].src;
-          console.log(hqAlbumImage)
         }
       }catch(e){
       }
@@ -139,7 +138,7 @@ setTimeout(() => {
       console.log(JSON.stringify(e));
     }
 
-    console.log(JSON.stringify(state));
+    // console.log(JSON.stringify(state));
     return state;
   };
 

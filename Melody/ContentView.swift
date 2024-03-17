@@ -50,7 +50,7 @@ struct ContentView: View {
             Label("Mini", systemImage: "square.and.arrow.down.fill")
           }
           .tag(3).onAppear {
-            viewModel.miniPlayer = 1
+            viewModel.prepareForMiniView()
             selectedTab = 0
           }
 
