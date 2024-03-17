@@ -13,6 +13,7 @@ setTimeout(() => {
 
   window.getState = function () {
     let state = {
+      hqAlbumImage: "",
       albumImage: "",
       albumName: "",
       artistName: "",
@@ -84,6 +85,21 @@ setTimeout(() => {
       let albumImage = document.querySelector(
         'img[data-testid="cover-art-image"]'
       )?.src;
+      let hqAlbumImage = ""; 
+      try{
+
+        hqAlbumImage = document.querySelectorAll(
+          'img[data-testid="cover-art-image"]'
+        );
+  
+        //filter out the hqAlbumImage based on the larges image
+        if (hqAlbumImage && hqAlbumImage.length) {
+          hqAlbumImage = Array.from(hqAlbumImage).sort((a, b) => {
+            return b.naturalWidth * b.naturalHeight - a.naturalWidth * a.naturalHeight;
+          })[0].src;
+        }
+      }catch(e){
+      }
 
       let queue =
         document
@@ -94,6 +110,7 @@ setTimeout(() => {
           .querySelector('button[data-testid="lyrics-button"]')
           ?.getAttribute("aria-pressed") === "true";
       state = {
+        hqAlbumImage: hqAlbumImage,
         albumImage: albumImage,
         albumName: "",
         artistName: artistName,
@@ -121,13 +138,11 @@ setTimeout(() => {
       console.log(JSON.stringify(e));
     }
 
-    console.log(JSON.stringify(state));
+    // console.log(JSON.stringify(state));
     return state;
   };
 
   setInterval(() => {
     window.getState();
   }, 850);
-
-  
 }, 400);

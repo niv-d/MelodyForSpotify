@@ -5,8 +5,8 @@
 //  Created by Devin Ratcliffe on 3/2/24.
 //
 
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
 @main
 struct MelodyApp: App {
@@ -15,12 +15,10 @@ struct MelodyApp: App {
   }
   var body: some Scene {
     WindowGroup {
-      ContentView().frame(
-        minWidth: 1000,
-        minHeight: 700)
+      ContentView().cornerRadius(5)
     }.windowResizability(.contentSize)
   }
-  
+
   func configureAudioSession() {
     do {
       try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)

@@ -10,79 +10,83 @@ import RealityKitContent
 import SwiftUI
 import WebKit
 
-struct SpotifyState: Codable {
-  var albumImage: String = ""
-  var albumName: String = ""
-  var artistName: String = ""
-  var device: String = ""
-  var heart: Bool = false
-  var lyrics: Bool = false
-  var playing: Bool = false
-  var queue: Bool = false
-  var repeatMode: RepeatMode = RepeatMode.none
-  var shuffle: Bool = false
-  var songLength: Double = 0
-  var songName: String = ""
-  var songPercent: Double = 0
-  var songPosition: Double = 0
-
-  enum CodingKeys: String, CodingKey {
-    case playing, songLength, songPercent, songPosition, heart, shuffle, device, songName,
-      artistName, albumName, albumImage, queue, lyrics
-    case repeatMode = "repeat"
-  }
-
-  enum RepeatMode: String, Codable {
-    case none = "none"
-    case one = "one"
-    case all = "all"
-  }
-}
-
 struct ContentView: View {
   @ObservedObject var viewModel = SpotifyWebViewState()
   @State private var selectedTab = 0
-
+  @State private var visibleControlsMiniPlayer = 1
   var body: some View {
     VStack {
+      if viewModel.miniPlayer == 1 {
+        MiniPlayer(viewModel: viewModel)
+      } else {
+        TabView(selection: $selectedTab) {
+          //TODO: Make this tab item a common component
+          Text("").tabItem {
+            Label("Melody", systemImage: "music.quarternote.3")
+          }
+          .tag(0)
+          .onAppear {
+            viewModel.goHome()
+            selectedTab = 0
+          }
+          Text("").tabItem {
+            Label("Home", systemImage: "house")
+          }
+          .tag(1)
+          .onAppear {
+            viewModel.goHome()
+            selectedTab = 0
+          }
 
-      TabView(selection: $selectedTab) {
-        Text("").tabItem {
-          Label("Home", systemImage: "house")
-        }
-        .tag(0)
-        .onAppear {
-          viewModel.goHome()
-        }.onTapGesture {
-          viewModel.goHome()
-        }
+          Text("").tabItem {
+            Label("Search", systemImage: "magnifyingglass")
+          }
+          .tag(2).onAppear {
+            viewModel.goSearch()
+            selectedTab = 0
+          }
 
-        Text("").tabItem {
-          Label("Search", systemImage: "magnifyingglass")
-        }
-        .tag(1).onAppear {
-          viewModel.goSearch()
-        }
+          Text("").tabItem {
+            Label("Mini", systemImage: "square.and.arrow.down.fill")
+          }
+          .tag(3).onAppear {
+            viewModel.prepareForMiniView()
+            selectedTab = 0
+          }
 
-        Text("").tabItem {
-          Label("Reload Player", systemImage: "arrow.clockwise")
-        }
-        .tag(2).onAppear {
-          viewModel.webView.load(URLRequest(url: URL(string: "https://accounts.spotify.com/en/login")!))
-          selectedTab = 0
-        }
+          Text("").tabItem {
+            Label("---", systemImage: "square.dashed")
+          }
+          .tag(4).onAppear {
+            selectedTab = 0
+          }
 
-      }
-      .toolbar {
-        ToolbarItemGroup(placement: .bottomOrnament) {
-          PlayerBar(viewModel: viewModel)
+          Text("").tabItem {
+            Label("Reload Player", systemImage: "arrow.clockwise")
+          }
+          .tag(5).onAppear {
+            viewModel.webView.load(
+              URLRequest(url: URL(string: "https://accounts.spotify.com/en/login")!))
+            selectedTab = 0
+          }
+
         }
+        .toolbar {
+          ToolbarItemGroup(placement: .bottomOrnament) {
+            PlayerBar(viewModel: viewModel)
+          }
+        }
+        .frame(
+          minWidth: 1000,
+          minHeight: 700)
       }
     }
     .overlay(
       SpotifyWebView(webView: viewModel.webView, viewModel: viewModel)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+        .opacity(
+          viewModel.miniPlayer == 1 ? 0 : 1)
     )
   }
 }
