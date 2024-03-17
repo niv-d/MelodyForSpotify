@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		6A256C7A2B97898800FE8538 /* SpotifyWebViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A256C792B97898800FE8538 /* SpotifyWebViewState.swift */; };
-		6A5A3B422BA780C900311568 /* View+WindowGeometryPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5A3B412BA780C900311568 /* View+WindowGeometryPreferences.swift */; };
 		6A5C8B422B9E097C00F05747 /* MiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5C8B412B9E097C00F05747 /* MiniPlayer.swift */; };
 		6A6BD6AE2B93DD7B0002E8AB /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 6A6BD6AD2B93DD7B0002E8AB /* RealityKitContent */; };
 		6A6BD6B02B93DD7B0002E8AB /* MelodyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6BD6AF2B93DD7B0002E8AB /* MelodyApp.swift */; };
