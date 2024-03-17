@@ -11,7 +11,7 @@ import WebKit
 struct SpotifyWebView: UIViewRepresentable {
   let webView: WKWebView
   let viewModel: SpotifyWebViewState
-  
+
   private func log(
     _ items: Any...,
     separator: String = " ",
@@ -21,7 +21,7 @@ struct SpotifyWebView: UIViewRepresentable {
     let message = items.map { "\($0)" }.joined(separator: separator)
     print("\(prefix):\n \(message)", terminator: terminator)
   }
-  
+
   func makeUIView(context: Context) -> WKWebView {
     webView.configuration.userContentController.add(
       context.coordinator as WKScriptMessageHandler, name: "consoleLog")
@@ -32,24 +32,24 @@ struct SpotifyWebView: UIViewRepresentable {
     // webView.load(URLRequest(url: URL(string: "https://open.spotify.com")!))
     webView.isOpaque = false
     webView.backgroundColor = UIColor.clear
-    
+
     return webView
   }
-  
+
   func updateUIView(_ uiView: WKWebView, context: Context) {
   }
-  
+
   func makeCoordinator() -> Coordinator {
     Coordinator(self)
   }
-  
+
   class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
     var parent: SpotifyWebView
-    
+
     init(_ parent: SpotifyWebView) {
       self.parent = parent
     }
-    
+
     enum FileError: Error {
       case fileNotFound
       case unreadableContent
@@ -64,14 +64,14 @@ struct SpotifyWebView: UIViewRepresentable {
         throw FileError.unreadableContent
       }
     }
-    
+
     // Why?? This fixes an issue with "EOF" when loading the CSS, I couldn't figure out why, but
     // **magic**
     private func encodeStringTo64(fromString: String) -> String? {
       let plainData = fromString.data(using: .utf8)
       return plainData?.base64EncodedString(options: [])
     }
-    
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
       do {
         let cssFile = try readFileBy(name: "theme", type: "css")
@@ -90,10 +90,10 @@ struct SpotifyWebView: UIViewRepresentable {
             style.type = 'text/css';
             style.innerHTML = window.atob('\(encodeStringTo64(fromString: cssFile)!)'); //**magic**
             parent.appendChild(style);
-          
+
             //Inject JS
             \(jsFile)
-          
+
             console.log("Injected into spotify");
           })()
           """
@@ -105,16 +105,16 @@ struct SpotifyWebView: UIViewRepresentable {
       } catch {
         parent.log("Error during loading files to inject: \(error)")
       }
-      
+
     }
-    
+
     func userContentController(
       _ userContentController: WKUserContentController, didReceive message: WKScriptMessage
     ) {
       if message.name == "consoleLog", let log = message.body as? String {
         parent.log("Message from console.log: \(log)")
       }
-      if message.name == "pushState" , let messageBody = message.body as? String {
+      if message.name == "pushState", let messageBody = message.body as? String {
         DispatchQueue.main.async {
           let jsonData = Data(messageBody.utf8)
           self.parent.log("Got state \(jsonData)")
