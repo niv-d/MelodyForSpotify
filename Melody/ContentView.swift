@@ -22,7 +22,7 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
           //TODO: Make this tab item a common component
           Text("").tabItem {
-            Label("Spotify", systemImage: "music.quarternote.3")
+            Label("Melody", systemImage: "music.quarternote.3")
           }
           .tag(0)
           .onAppear {
@@ -76,16 +76,18 @@ struct ContentView: View {
             PlayerBar(viewModel: viewModel)
           }
         }
+        .frame(
+          minWidth: 1000,
+          minHeight: 700)
       }
     }
-
     .overlay(
       SpotifyWebView(webView: viewModel.webView, viewModel: viewModel)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .opacity(
           viewModel.miniPlayer == 1 ? 0 : 1)
-    ).aspectRatio(1, contentMode: .fit)
+    )
   }
 }
 
