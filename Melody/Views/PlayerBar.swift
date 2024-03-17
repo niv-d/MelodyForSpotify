@@ -139,8 +139,8 @@ struct NowPlaying: View {
                         toggled: viewModel.spotifyState.repeatMode != SpotifyState.RepeatMode.none,
                         action: { viewModel.mediaRepeat() })
                     }
-//                    Divider()
-//                      .background(Color.gray)
+                    //                    Divider()
+                    //                      .background(Color.gray)
                     //TODO: Checkboxes instead?
                     //                    TextButton(action: {}, text: "DMR-PC")
                     //                    TextButton(action: {}, text: "nvd-std")
@@ -189,24 +189,25 @@ struct NowPlaying: View {
           .padding(.horizontal, -10)
         }
       }.clipShape(RoundedRectangle(cornerRadius: 15))
+        .overlay {
+          RoundedRectangle(cornerSize: CGSize(width: 15, height: 15)).inset(by: -1)
+            .fill(.shadow(.inner(color: .black, radius: 3, y: 3)))
+            .stroke(
+              LinearGradient(
+                gradient: Gradient(colors: [.black.opacity(0.2), .white.opacity(0.3)]),
+                startPoint: .top,
+                endPoint: .bottom
+              ),
+              lineWidth: 1
+            )
+            .foregroundStyle(.black.opacity(0.2))
+            .opacity(1.0)
+            .allowsHitTesting(false)
+        }
     }
     .frame(width: 400, height: 70)
     .padding(.horizontal)
-    .overlay {
-        RoundedRectangle(cornerSize: CGSize(width: 15, height: 15)).inset(by: -1)
-          .fill(.shadow(.inner(color:.black, radius: 3, y: 3)))
-          .stroke(
-            LinearGradient(
-              gradient:  Gradient(colors: [.black.opacity(0.2), .white.opacity(0.3) ]),
-              startPoint: .top,
-              endPoint: .bottom
-            ),
-            lineWidth: 1
-          )
-          .foregroundStyle(.black.opacity(0.2))
-          .opacity(1.0)
-          .allowsHitTesting(false)
-      }
+
   }
 
   private func timeString(seconds: Double) -> String {
