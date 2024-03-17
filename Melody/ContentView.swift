@@ -20,8 +20,9 @@ struct ContentView: View {
         MiniPlayer(viewModel: viewModel)
       } else {
         TabView(selection: $selectedTab) {
+          //TODO: Make this tab item a common component
           Text("").tabItem {
-            Label("Spotify", systemImage: "house")
+            Label("Spotify", systemImage: "music.quarternote.3")
           }
           .tag(0)
           .onAppear {
@@ -54,9 +55,16 @@ struct ContentView: View {
           }
 
           Text("").tabItem {
-            Label("Reload Player", systemImage: "arrow.clockwise")
+            Label("---", systemImage: "square.dashed")
           }
           .tag(4).onAppear {
+            selectedTab = 0
+          }
+
+          Text("").tabItem {
+            Label("Reload Player", systemImage: "arrow.clockwise")
+          }
+          .tag(5).onAppear {
             viewModel.webView.load(
               URLRequest(url: URL(string: "https://accounts.spotify.com/en/login")!))
             selectedTab = 0
@@ -67,15 +75,15 @@ struct ContentView: View {
           ToolbarItemGroup(placement: .bottomOrnament) {
             PlayerBar(viewModel: viewModel)
           }
-        }.frame(
-          minWidth: 1000,
-          minHeight: 700)
+        }
       }
     }
+
     .overlay(
       SpotifyWebView(webView: viewModel.webView, viewModel: viewModel)
         .clipShape(RoundedRectangle(cornerRadius: 20))
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity).opacity(
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+        .opacity(
           viewModel.miniPlayer == 1 ? 0 : 1)
     ).aspectRatio(1, contentMode: .fit)
   }
